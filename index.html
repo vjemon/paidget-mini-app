@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaidGet Official Portal</title>
+  
+  <!-- Telegram Web App SDK Connector -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d1117;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .portal-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .portal-header h2 {
+      font-size: 22px;
+      color: #58a6ff;
+      margin-bottom: 8px;
+    }
+
+    .portal-header p {
+      font-size: 13px;
+      color: #8b949e;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      text-align: center;
+      letter-spacing: 2px;
+      transition: border-color 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #58a6ff;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #238636, #2ea043);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(46, 160, 67, 0.3);
+      transition: background 0.3s, transform 0.1s;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .status-msg {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #f85149;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="portal-card">
+      <div class="portal-header">
+        <h2>⚡ PaidGet Gateway ⚡</h2>
+        <p>Enter your secret access code to continue</p>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="secretCode" placeholder="Enter Secret Code" autocomplete="off" />
+      </div>
+
+      <button class="btn-submit" onclick="submitAccessCode()">Unlock Portal</button>
+      
+      <div class="status-msg" id="errorMsg">Please enter a valid secret code!</div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Telegram Web App SDK
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.ready();
+
+    function submitAccessCode() {
+      const codeInput = document.getElementById('secretCode').value;
+      const errorElement = document.getElementById('errorMsg');
+
+      if (!codeInput.trim()) {
+        errorElement.style.display = 'block';
+        return;
+      }
+
+      errorElement.style.display = 'none';
+
+      // Send Code & Telegram User ID to Bot
+      const payload = {
+        action: "verify_code",
+        code: codeInput.trim(),
+        user_id: tg.initDataUnsafe?.user?.id || null,
+        username: tg.initDataUnsafe?.user?.username || null
+      };
+
+      tg.sendData(JSON.stringify(payload));
+      tg.close();
+    }
+  </script>
+
+</body>
+</html>
